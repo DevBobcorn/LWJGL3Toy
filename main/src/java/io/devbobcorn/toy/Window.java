@@ -46,8 +46,10 @@ public class Window {
         } else {
             glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
             GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-            width = vidMode.width();
-            height = vidMode.height();
+            if (vidMode != null) {
+                width = vidMode.width();
+                height = vidMode.height();
+            }
         }
 
         windowId = glfwCreateWindow(width, height, title, NULL, NULL);
@@ -58,20 +60,12 @@ public class Window {
         glfwSetFramebufferSizeCallback(windowId, (window, w, h) -> resized(w, h));
 
         glfwSetErrorCallback((int errorCode, long msgPtr) ->
-                System.err.printf("Error code [{}], msg [{}]%n", errorCode, MemoryUtil.memUTF8(msgPtr))
+                System.err.println("Error code [" + errorCode + "], msg [" + MemoryUtil.memUTF8(msgPtr) + "]")
         );
 
         glfwSetKeyCallback(windowId, (window, key, scancode, action, mods) -> {
             keyCallBack(key, action);
         });
-
-        glfwMakeContextCurrent(windowId);
-
-        if (opts.fps > 0) {
-            glfwSwapInterval(0);
-        } else {
-            glfwSwapInterval(1);
-        }
 
         glfwShowWindow(windowId);
 
@@ -138,9 +132,7 @@ public class Window {
 
     public static class WindowOptions {
         public boolean compatibleProfile;
-        public int fps;
         public int height;
-        //public int ups = Engine.TARGET_UPS;
         public int width;
         public boolean useUiScale;
     }

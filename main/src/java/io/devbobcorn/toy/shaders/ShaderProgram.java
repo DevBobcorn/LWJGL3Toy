@@ -1,4 +1,4 @@
-package io.devbobcorn.toy;
+package io.devbobcorn.toy.shaders;
 
 import static org.lwjgl.opengl.GL20.*;
 
